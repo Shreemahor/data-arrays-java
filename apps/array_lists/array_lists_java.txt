@@ -1,0 +1,136 @@
+The java files for this game are each in seperate java files and some parts are not entirely organized so this is just a collection of the java files
+because I made them seperately:
+
+import java.util.*;
+
+public class RemoveEvens {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<Integer> list1 = new ArrayList<>();
+		list1.add(1);
+		list1.add(2);
+		list1.add(2);
+		list1.add(2);
+		list1.add(3);
+		list1.add(4);
+		list1.add(4);
+		list1.add(4);
+		list1.add(1);
+		System.out.println("Original list:\n" + list1);
+		
+		// 1. Traverse backward
+//		for (int i = list1.size() - 1; i >= 0; i--) {
+//			if (list1.get(i) % 2 == 0) {
+//				list1.remove(i);
+//			}
+//		}
+//		System.out.println("Removing even numbers by traversing backward:\n" + list1);
+		
+		// 2. Traverse forward
+		for (int n = 0; n < list1.size(); n++) {
+			if (list1.get(n) % 2 == 0) {
+				list1.remove(n);
+				n--;
+			}
+		}
+		System.out.println("Removing  even numbers by traversing forward:\n" + list1);
+	}
+
+}
+
+import java.util.*;
+
+public class ArrayList {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<Integer> my_list = new ArrayList<>();
+		my_list.add(1);
+		my_list.add(5);
+		my_list.add(6);
+		my_list.add(1);
+		my_list.add(4);
+		my_list.add(1);
+		my_list.add(1);
+		my_list.add(9);
+		my_list.add(1);
+		my_list.add(1);
+		System.out.println("before " + my_list);
+		for (int i = my_list.size() - 1; i >= 0; i--) {
+			if (my_list.get(i) == 1) {
+				my_list.remove(i);
+			}
+		}
+		System.out.println("after " + my_list);
+	}
+
+}
+
+import java.util.*;
+
+public class CircleList {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<Circle> circles = new ArrayList<>();
+		circles.add(new Circle());
+		circles.add(new Circle(2, "red"));
+		circles.add(new Circle(8.0, "blue"));
+		circles.add(new Circle());
+		circles.add(new Circle(1.2, "yellow"));
+		circles.add(new Circle(3, "purple"));
+		
+		System.out.println(circles);
+		for (Circle e: circles) {
+			System.out.println("Area: " + e.get_area());
+		}
+	}
+
+}
+
+import java.util.*;
+
+public class RemoveDuplicates {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<Integer> list = new ArrayList<>();
+		list.add(3);
+		list.add(4);
+		list.add(2);
+		list.add(1);
+		list.add(1);
+		list.add(3);
+		list.add(2);
+		list.add(2);
+		list.add(1);
+		list.add(2);
+		list.add(1);
+		list.add(1);
+		list.add(3);
+		
+//		ArrayList<Integer> result = new ArrayList<>();
+//
+//		for (int e: list) {
+//			if (result.indexOf(e) < 0) {
+//				result.add(e);
+//			}
+//		}
+		
+		remove_duplicates(list);
+		System.out.print(list);
+	}
+
+	public static void remove_duplicates(ArrayList<Integer> list) {
+		for (int i = list.size() - 1; i >= 0; i--) {
+			int following_index = i + 1;
+			while (following_index < list.size()) {
+				if (list.get(i) == list.get(following_index)) {
+					list.remove(i);
+				}
+				else following_index++;
+			}
+		}
+	}
+}

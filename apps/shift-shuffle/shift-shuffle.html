@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Shifter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="game-title"></h1>
+
+        <div class="controls-container">
+            <div class="input-area">
+                <label for="array-input">Edit Array (comma-separated numbers):</label>
+                <input type="text" id="array-input" placeholder="e.g., 1,2,3,4,5">
+            </div>
+
+            <div class="button-group">
+                <button id="shuffle-btn">Shuffle Random</button>
+                <button id="shift-left-btn">Shift Left</button>
+                <button id="shift-right-btn">Shift Right</button>
+            </div>
+        </div>
+
+        <div id="array-display" class="display-area">
+            <!-- Array elements will be displayed here -->
+        </div>
+
+        <a href="../../index.html" class="back-home-btn">Back Home</a>
+    </div>
+
+    <script src="shift-shuffle.js"></script>
+</body>
+</html>

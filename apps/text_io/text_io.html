@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java Text I/O</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#FDFBF7;
+      --text:#1E293B;
+      --primary:#0D9488;
+      --secondary:#FF6B6B;
+      --border:#E8E5E0;
+      --card:#FFFFFF;
+      --shadow: 0 8px 24px rgba(30,41,59,0.08);
+      --shadow2: 0 2px 10px rgba(30,41,59,0.06);
+      --radius:12px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: Inter, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+
+    .topbar{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px 18px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    h1{
+      margin:16px 0 8px;
+      text-align:center;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing:-0.02em;
+    }
+
+    .home-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      text-decoration:none;
+      color:#fff;
+      font-weight:600;
+      background: linear-gradient(135deg, #FF6B6B, #EE5A6F);
+      box-shadow: 0 10px 20px rgba(255,107,107,0.22);
+      border:1px solid rgba(255,255,255,0.25);
+      transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .home-btn:hover{
+      transform: translateY(-1px);
+      filter: saturate(1.05);
+      box-shadow: 0 14px 28px rgba(255,107,107,0.28);
+    }
+
+    main{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 0 18px 40px;
+    }
+
+    .card{
+      background:var(--card);
+      border:2px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding:16px;
+    }
+
+    .lead{
+      margin-top: 10px;
+      padding:18px;
+    }
+    .lead p{ margin:0; color: rgba(30,41,59,0.92); }
+
+    .grid3{
+      display:grid;
+      grid-template-columns: 1fr 0.9fr 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){
+      .grid3{ grid-template-columns:1fr; }
+    }
+
+    .panel-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin:0 0 10px;
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:0.01em;
+      color: rgba(30,41,59,0.9);
+    }
+    .badge{
+      font-size:12px;
+      font-weight:700;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#fff;
+      color: rgba(30,41,59,0.75);
+    }
+    .badge.teal{
+      border-color: rgba(13,148,136,0.22);
+      color: var(--primary);
+      background: rgba(13,148,136,0.08);
+    }
+    .badge.coral{
+      border-color: rgba(255,107,107,0.22);
+      color: #C2414B;
+      background: rgba(255,107,107,0.10);
+    }
+
+    pre{
+      margin:0;
+      padding:14px;
+      background: #FCFCFB;
+      border:2px solid var(--border);
+      border-radius: 10px;
+      overflow:auto;
+      box-shadow: var(--shadow2);
+      font-size: 13px;
+      line-height:1.45;
+    }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .fs{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .filelist{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .filebtn{
+      width:100%;
+      text-align:left;
+      padding:10px 10px;
+      border-radius:10px;
+      background:#fff;
+      border:2px solid var(--border);
+      color: var(--text);
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+      transition: transform 120ms ease, border-color 120ms ease;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .filebtn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(13,148,136,0.35);
+    }
+    .filebtn[aria-selected="true"]{
+      border-color: rgba(13,148,136,0.55);
+      background: rgba(13,148,136,0.06);
+    }
+    .filemeta{
+      font-size:12px;
+      color: rgba(30,41,59,0.65);
+    }
+
+    .contentbox{
+      min-height: 270px;
+      border:2px solid var(--border);
+      border-radius:10px;
+      padding:12px;
+      background:#fff;
+      box-shadow: var(--shadow2);
+      white-space:pre-wrap;
+      overflow:auto;
+      font-size: 13.5px;
+    }
+
+    .explainer{
+      margin-top:14px;
+      padding:18px;
+    }
+    .explainer p{ margin:0; }
+
+    .section{
+      margin-top:14px;
+      padding:16px;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap:14px;
+      margin-top:10px;
+    }
+    @media (max-width: 980px){
+      .controls{ grid-template-columns:1fr; }
+    }
+
+    textarea{
+      width:100%;
+      min-height: 140px;
+      resize: vertical;
+      padding:12px;
+      border-radius:10px;
+      border:2px solid var(--border);
+      font-family: Inter, sans-serif;
+      font-size:14px;
+      outline:none;
+    }
+    textarea:focus{
+      border-color: rgba(13,148,136,0.45);
+      box-shadow: 0 0 0 4px rgba(13,148,136,0.10);
+    }
+
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    label{
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(30,41,59,0.85);
+    }
+
+    select, input[type="text"]{
+      padding:10px 10px;
+      border-radius:10px;
+      border:2px solid var(--border);
+      background:#fff;
+      font-family: Inter, sans-serif;
+      font-size:14px;
+      outline:none;
+    }
+    select:focus, input[type="text"]:focus{
+      border-color: rgba(13,148,136,0.45);
+      box-shadow: 0 0 0 4px rgba(13,148,136,0.10);
+    }
+
+    .btn{
+      padding:10px 12px;
+      border-radius:10px;
+      border:2px solid var(--border);
+      background:#fff;
+      color: var(--text);
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+      user-select:none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(13,148,136,0.35);
+      box-shadow: var(--shadow);
+    }
+    .btn.primary{
+      background: rgba(13,148,136,0.10);
+      border-color: rgba(13,148,136,0.35);
+      color: #0B6F68;
+    }
+    .btn.secondary{
+      background: rgba(255,107,107,0.10);
+      border-color: rgba(255,107,107,0.35);
+      color: #B93C47;
+    }
+
+    .status{
+      margin-top:10px;
+      border-radius:10px;
+      border:2px solid var(--border);
+      background:#fff;
+      padding:10px 12px;
+      font-size: 13px;
+      box-shadow: var(--shadow2);
+    }
+    .status .ok{ color: var(--primary); font-weight:700; }
+    .status .err{ color: #C2414B; font-weight:700; }
+
+    .output{
+      margin-top:10px;
+      border-radius:10px;
+      border:2px solid var(--border);
+      background:#fff;
+      padding:12px;
+      min-height: 140px;
+      white-space:pre-wrap;
+      overflow:auto;
+      box-shadow: var(--shadow2);
+      font-size: 13.5px;
+    }
+
+    .hint{
+      margin-top:10px;
+      font-size:12.5px;
+      color: rgba(30,41,59,0.72);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <a class="home-btn" href="../../index.html">Back Home</a>
+    <div style="width:120px"></div>
+  </div>
+
+  <main>
+    <h1 id="pageTitle">📄✍️ Java Text I/O 💾🔍</h1> <!-- this line should be edited to edit title -->
+
+    <section class="card lead">
+      <p>
+        In Java, <strong>Scanner</strong> reads input from the keyboard or from files (token-by-token using delimiters like whitespace),
+        while <strong>PrintWriter</strong> writes text out to files cleanly. You’ll usually wrap file I/O in <strong>try-catch</strong>
+        blocks to handle errors like missing files, and choose between approaches based on the job:
+        Scanner is convenient for parsing numbers/words; PrintWriter is great for writing human-readable text; buffered streams are better for
+        larger data or performance-sensitive work.
+      </p>
+    </section>
+
+    <section class="grid3">
+      <div class="card">
+        <div class="panel-title">
+          <span>Code snippet (write a file)</span>
+          <span class="badge teal">PrintWriter</span>
+        </div>
+        <pre><code id="demoWriteCode"></code></pre>
+      </div>
+
+      <div class="card fs">
+        <div class="panel-title">
+          <span>Simulated file system</span>
+          <span class="badge">3 files</span>
+        </div>
+        <div class="filelist" id="fileList"></div>
+        <div class="hint">
+          Click a file to preview it. This middle panel is the “directory.”
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="panel-title">
+          <span>File contents</span>
+          <span class="badge coral" id="activeFileBadge">none</span>
+        </div>
+        <div class="contentbox" id="filePreview">(select a file)</div>
+      </div>
+    </section>
+
+    <section class="card explainer">
+      <p>
+        Common problems: <strong>FileNotFoundException</strong> happens when the path doesn’t exist or your program lacks permission.
+        With Scanner, delimiter and token issues are frequent—using <code>nextInt()</code> when the next token isn’t a number, or mixing
+        <code>nextLine()</code> with <code>next()</code>/<code>nextInt()</code> (newline leftovers). Java file paths can be relative to the
+        “working directory,” so <code>"data/notes.txt"</code> might work in an IDE but fail elsewhere unless the folder exists.
+      </p>
+    </section>
+
+    <section class="card">
+      <div class="panel-title">
+        <span>Code snippet (proper error handling)</span>
+        <span class="badge teal">try-catch + throws</span>
+      </div>
+      <pre><code id="demoErrorCode"></code></pre>
+    </section>
+
+    <section class="card section">
+      <div class="panel-title">
+        <span>Interactive simulator (read → write → close cycle)</span>
+        <span class="badge">localStorage</span>
+      </div>
+
+      <div class="controls">
+        <div>
+          <label for="textInput">Text to save / append</label>
+          <textarea id="textInput" placeholder="Type some text... Use new lines if you want."></textarea>
+
+          <div class="row" style="margin-top:10px;">
+            <label for="filenameInput">Filename</label>
+            <input id="filenameInput" type="text" placeholder="e.g., notes.txt" />
+            <button class="btn primary" id="saveBtn">Save to File</button>
+          </div>
+
+          <div class="hint">
+            “Save to File” overwrites the file content (like opening a PrintWriter normally). Use “Write New Line” to append.
+          </div>
+        </div>
+
+        <div>
+          <div class="row">
+            <label for="fileSelect">Choose file</label>
+            <select id="fileSelect"></select>
+            <button class="btn" id="loadBtn">Load File</button>
+          </div>
+
+          <div class="row" style="margin-top:10px;">
+            <button class="btn secondary" id="readBtn">Read File</button>
+            <button class="btn primary" id="nextLineBtn">Next Line</button>
+            <button class="btn primary" id="appendBtn">Write New Line</button>
+          </div>
+
+          <div class="status" id="statusBox">
+            <span class="ok">Ready.</span> Pick a file or type a new filename to create one.
+          </div>
+
+          <div class="output" id="outputBox">(output appears here)</div>
+
+          <div class="hint">
+            “Read File” prepares a Scanner-like read. “Next Line” simulates successive <code>nextLine()</code> calls.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./text_io.js"></script>
+</body>
+</html>

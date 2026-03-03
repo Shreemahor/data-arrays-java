@@ -1,0 +1,185 @@
+The java files for this game are each in seperate java files (except cereal data which shows clear java text i/o concepts and its complete by itself)
+and some parts are not entirely organized so this is just a collection of the java files
+because I made them seperately:
+
+
+import java.io.*;
+import java.util.*;
+
+public class RandomText {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		record_random();
+	}
+	
+	public static void record_random() {
+		try {
+			File file = new File("random.txt");
+			if (file.exists()) {
+				throw new IOException("File already exists: " + file.getPath());
+			}
+			PrintWriter output = new PrintWriter(file);
+			for (int i = 0; i < 100; i++) {
+				output.print((int)(Math.random() * 100) + " ");
+			}
+			output.close();
+			read(file);
+		}
+		catch(IOException ex) {
+			ex.printStackTrace();
+		};
+	}
+	
+	public static void read(File f) {
+		try(Scanner scan = new Scanner(f)) {
+			if (!f.exists()) {
+				throw new IOException("File does not exist");
+			}
+			ArrayList<Integer> data_list = new ArrayList<>();
+			while(scan.hasNext()) {
+				data_list.add(scan.nextInt());
+			}
+			scan.close();
+			for (int i = 0; i < data_list.size(); i++) {
+				if ((i + 1) % 10 != 0) {System.out.print(data_list.get(i) + " ");}
+				else {System.out.println(data_list.get(i) + " ");}
+			}
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+
+
+public class Cereal {
+
+	 private String name;
+	 private int calories;
+	 private double fiber;
+	 private double carbs;
+	 private double serving_size;
+
+	 public Cereal(String name, int calories, double fiber, double carbs, double serving_size) {
+		 this.name = name;
+		 this.calories = calories;
+		 this.fiber = fiber;
+		 this.carbs = carbs;
+		 this.serving_size = serving_size;
+	 }
+
+	 public String get_name() {
+		 return this.name;
+	 }
+	 public int get_calories() {
+		 return this.calories;
+	 }	 
+	 public double get_fiber() {
+		 return this.fiber;
+	 }	 
+	 public double get_carbs() {
+		 return this.carbs;
+	 }	 
+	 public double get_serving_size() {
+		 return this.serving_size;
+	 } 
+	 
+	 public void set_name(String name) {
+		 this.name = name;
+	 }
+	 public void set_calories(int calories) {
+		 this.calories = calories;
+	 }	 
+	 public void set_fiber(double fiber) {
+		 this.fiber = fiber;
+	 }	 
+	 public void set_carbs(double carbs) {
+		 this.carbs = carbs;
+	 }	 
+	 public void set_serving_size(double serving_size) {
+		 this.serving_size = serving_size;
+	 }
+	 
+	 public String toString() {
+		 return "Name: " + this.name + " | Calories: " + this.calories + " | Fiber: " + this.fiber + " | Carbs: " + this.carbs + " | Serving Size: " + this.serving_size;
+	 }
+}
+
+
+import java.util.*;
+
+public class ExceptionHandling {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner input = new Scanner(System.in);
+		boolean is_correct_input = false;
+		while(!is_correct_input) {
+			System.out.print("Enter an integer: ");
+			try {
+				int num = input.nextInt();
+				is_correct_input = true;
+			}
+			catch(Exception ex) {
+				System.out.println("Input must be an integer. Try again");
+				ex.printStackTrace();
+				input.nextLine();
+			}
+		}
+	}
+}
+
+
+import java.io.*;
+import java.util.*;
+
+public class RecordScores {
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		record();
+	}
+	
+	public static void record() throws IOException {
+		File scoreFile = new File("animals.txt");
+		if (scoreFile.exists()) {
+			throw new IOException("File already exists.");
+		}
+		
+		PrintWriter record = new PrintWriter(scoreFile);
+		record.println("rabbit u snake");
+		record.println("tiger i umbrella"); 
+		record.println("viper a bat");
+		record.close();
+	}
+}
+
+
+import java.io.*;
+import java.util.*;
+
+public class Listing12_3ReadFile {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println(read_from_file("read.txt"));
+	}
+
+	public static String read_from_file(String path){
+		String contents = "";
+		
+		try(Scanner scan = new Scanner(new File(path))) {
+			while(scan.hasNext()) {
+				contents += scan.nextLine();
+				contents += "\n";
+			}
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		return contents;
+	}
+}
+

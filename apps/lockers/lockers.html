@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locker Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --background-color: #FDFBF7; /* Soft Cream */
+            --text-color: #1E293B;      /* Slate */
+            --primary-accent: #0D9488;   /* Teal */
+            --secondary-accent: #FF6B6B; /* Coral */
+            --button-gradient-start: #FF6B6B; /* Coral */
+            --button-gradient-end: #EE5A6F;   /* Slightly darker Coral */
+            --container-bg: white;
+            --border-color: #E8E5E0;     /* Light off-white for borders */
+            --locker-closed: #E0E7FF;
+            --locker-open: #C7D2FE;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-accent);
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f0f5ff;
+            border-radius: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-accent);
+        }
+
+        input[type="range"] {
+            width: 200px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f5ff;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .student-display {
+            font-size: 1.5em;
+            color: var(--secondary-accent);
+            margin: 10px 0;
+            font-weight: 700;
+        }
+
+        .hallway {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px; /* Increased gap for better vertical spacing between rows */
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            min-height: 200px;
+            position: relative; /* For absolute positioning of students */
+        }
+
+        .locker {
+            width: 50px;
+            height: 80px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .locker.closed {
+            background-color: var(--locker-closed);
+            border: 2px solid #c5d2ff;
+        }
+
+        .locker.open {
+            background-color: var(--locker-open);
+            border: 2px solid #a5b4f8;
+        }
+
+        .locker::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            background-color: #ffffff;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .locker.open::before {
+            background-color: #d1d9ff;
+        }
+
+        .locker-handle {
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            width: 8px;
+            height: 15px;
+            background-color: #8c9bbd;
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+
+        .student {
+            position: absolute;
+            width: 30px; /* Increased size for better visibility */
+            height: 30px; /* Increased size for better visibility */
+            background-color: var(--secondary-accent);
+            border-radius: 50%;
+            border: 2px solid white; /* Added border for contrast */
+            z-index: 10000; /* Even higher z-index to prevent flickering */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .student::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px; /* Adjusted for larger dot */
+            height: 12px; /* Adjusted for larger dot */
+            background-color: white;
+            border-radius: 50%;
+        }
+
+        .student.walk {
+            animation: walk 0.5s infinite alternate;
+        }
+
+        @keyframes walk {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(-5px); }
+        }
+
+        .tap-animation {
+            animation: tap 0.3s ease;
+        }
+
+        @keyframes tap {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .back-home-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end));
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .back-home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f5ff;
+            border-radius: 10px;
+            font-size: 0.9em;
+            width: 100%; /* Changed to full width */
+        }
+
+        .locker-number {
+            position: absolute;
+            bottom: -25px; /* Slightly increased to ensure readability */
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+    <h1>🔒 Locker Simulation 🔓</h1>
+
+    <div class="container">
+        <div class="controls">
+            <div class="control-group">
+                <label for="speedSlider">Speed Control</label>
+                <input type="range" id="speedSlider" min="1" max="50" value="25"> <!-- Increased max to 50 and default to 25 for faster default speed -->
+            </div>
+
+            <div class="control-group">
+                <label for="studentCount">Number of Students</label>
+                <input type="range" id="studentCount" min="1" max="100" value="100">
+            </div>
+        </div>
+
+        <div class="stats">
+            <div>Student: <span id="currentStudent">0</span></div>
+            <div>Open Lockers: <span id="openCount">0</span></div>
+            <div>Closed Lockers: <span id="closedCount">0</span></div>
+        </div>
+
+        <div class="student-display">Current Student: <span id="studentNumber">-</span></div>
+
+        <div class="hallway" id="hallway"></div>
+
+        <div class="instructions">
+            <p>Each student toggles lockers at intervals based on their number. Student 1 toggles every locker, Student 2 toggles every 2nd locker, Student 3 toggles every 3rd locker, etc. Ex: Student 4 toggles lockers 4, 8, 12, 16...
+                Watch as the students walk to their lockers and toggle them open or closed. The statistics above will update in real-time to show the current student and the count of open vs. closed lockers. Adjust the speed and number of students using the sliders to see how it affects the simulation.
+                As you'll discover by the end, only lockers the only open lockers will be those that are 1, 2, 4, 9, 16, 25... PERFECT SQUARES!
+            </p>
+        </div>
+
+        <button id="startBtn" class="back-home-button">Start Simulation</button>
+    </div>
+
+    <a href="../../index.html" class="back-home-button">Back to Home</a>
+
+    <script>
+        // Global variables
+        let lockers = [];
+        let students = [];
+        let hallway = document.getElementById('hallway');
+        let speed = 25; // Increased default speed
+        let studentCount = 100;
+        let currentStudent = 0;
+        let studentElements = [];
+
+        // Initialize the simulation
+        function initSimulation() {
+            // Clear hallway
+            hallway.innerHTML = '';
+            lockers = new Array(studentCount).fill(false);
+
+            // Create lockers
+            for (let i = 0; i < studentCount; i++) {
+                const locker = document.createElement('div');
+                locker.className = 'locker closed';
+                locker.dataset.index = i;
+
+                const handle = document.createElement('div');
+                handle.className = 'locker-handle';
+                locker.appendChild(handle);
+
+                const number = document.createElement('div');
+                number.className = 'locker-number';
+                number.textContent = i + 1;
+                locker.appendChild(number);
+
+                hallway.appendChild(locker);
+            }
+
+            // Reset stats
+            updateStats();
+            document.getElementById('studentNumber').textContent = '-';
+        }
+
+        // Update statistics display
+        function updateStats() {
+            const openCount = lockers.filter(locker => locker).length;
+            const closedCount = lockers.length - openCount;
+
+            document.getElementById('openCount').textContent = openCount;
+            document.getElementById('closedCount').textContent = closedCount;
+            document.getElementById('currentStudent').textContent = currentStudent;
+        }
+
+        // Toggle locker state
+        function toggleLocker(index) {
+            const locker = document.querySelector(`.locker[data-index="${index}"]`);
+            lockers[index] = !lockers[index];
+
+            if (lockers[index]) {
+                locker.classList.remove('closed');
+                locker.classList.add('open');
+            } else {
+                locker.classList.remove('open');
+                locker.classList.add('closed');
+            }
+
+            updateStats();
+        }
+
+        // Move student to locker with animation
+        function moveStudentToLocker(studentIndex, lockerIndex) {
+            return new Promise((resolve) => {
+                const student = studentElements[studentIndex];
+                const locker = document.querySelector(`.locker[data-index="${lockerIndex}"]`);
+
+                // Get positions
+                const lockerRect = locker.getBoundingClientRect();
+                const hallwayRect = hallway.getBoundingClientRect();
+
+                const targetX = lockerRect.left - hallwayRect.left + lockerRect.width/2 - student.offsetWidth/2;
+                const targetY = lockerRect.top - hallwayRect.top + lockerRect.height/2 - student.offsetHeight/2;
+
+                // Reset any existing transform to avoid conflicts
+                student.style.transform = '';
+
+                // Animate to locker (shortened duration and added ease for smoother animation)
+                gsap.to(student, {
+                    x: targetX,
+                    y: targetY,
+                    duration: 0.1 / speed, // Reduced for faster animation
+                    ease: "power1.out", // Added ease for smoother motion
+                    onComplete: () => {
+                        // Tap animation
+                        student.classList.add('tap-animation');
+                        setTimeout(() => {
+                            student.classList.remove('tap-animation');
+                            resolve();
+                        }, 100); // Reduced tap duration
+                    }
+                });
+            });
+        }
+
+        // Create student element
+        function createStudent(index) {
+            const student = document.createElement('div');
+            student.className = 'student';
+            student.id = `student-${index}`;
+            student.style.zIndex = 20;
+            hallway.appendChild(student);
+            studentElements.push(student);
+            return student;
+        }
+
+        // Run the simulation
+        async function runSimulation() {
+            // Reset current student
+            currentStudent = 0;
+            document.getElementById('studentNumber').textContent = '-';
+
+            // Reset all lockers
+            for (let i = 0; i < studentCount; i++) {
+                lockers[i] = false;
+                const locker = document.querySelector(`.locker[data-index="${i}"]`);
+                locker.classList.remove('open');
+                locker.classList.add('closed');
+            }
+
+            updateStats();
+
+            // Create students
+            studentElements = [];
+            for (let i = 0; i < studentCount; i++) {
+                createStudent(i);
+            }
+
+            // Move students to starting position (top-left of hallway)
+            for (let i = 0; i < studentCount; i++) {
+                const student = studentElements[i];
+                student.style.position = 'absolute';
+                student.style.left = '0px'; // Set to 0px as requested
+                student.style.top = '0px';  // Set to 0px as requested
+                student.style.transform = ''; // Ensure no conflicting transform
+            }
+
+            // Simulate students
+            for (let studentNumber = 1; studentNumber <= studentCount; studentNumber++) {
+                currentStudent = studentNumber;
+                document.getElementById('studentNumber').textContent = studentNumber;
+
+                // Walk to each locker that student toggles
+                for (let lockerIndex = studentNumber - 1; lockerIndex < studentCount; lockerIndex += studentNumber) {
+                    // Move student to locker
+                    await moveStudentToLocker(studentNumber - 1, lockerIndex);
+
+                    // Toggle locker
+                    toggleLocker(lockerIndex);
+
+                    // Small delay between actions (reduced for speed)
+                    await new Promise(resolve => setTimeout(resolve, 50 / speed)); // Reduced delay
+                }
+
+                // Wait for next student (reduced for speed)
+                await new Promise(resolve => setTimeout(resolve, 100 / speed)); // Reduced wait
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('speedSlider').addEventListener('input', (e) => {
+            speed = parseInt(e.target.value);
+        });
+
+        document.getElementById('studentCount').addEventListener('input', (e) => {
+            studentCount = parseInt(e.target.value);
+            initSimulation();
+        });
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            runSimulation();
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initSimulation();
+        });
+    </script>
+</body>
+</html>

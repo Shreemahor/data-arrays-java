@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hangman — Teal & Coral</title>
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#FDFBF7;
+      --text:#1E293B;
+      --teal:#0D9488;
+      --coral:#FF6B6B;
+      --coral2:#EE5A6F;
+      --card:#ffffff;
+      --line: rgba(30,41,59,0.14);
+      --shadow: 0 10px 30px rgba(30,41,59,0.10);
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom: 18px;
+    }
+
+    h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .home-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      text-decoration:none;
+      color: #fff;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--coral), var(--coral2));
+      box-shadow: 0 8px 18px rgba(238,90,111,0.30);
+      border: 0;
+      transition: transform .08s ease, filter .15s ease;
+      white-space: nowrap;
+    }
+    .home-btn:active{ transform: translateY(1px); }
+    .home-btn:hover{ filter: brightness(1.02); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items:start;
+    }
+
+    @media (max-width: 880px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .stage-wrap{
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    /* Stage area */
+    #stage{
+      position: relative;
+      width: min(520px, 100%);
+      aspect-ratio: 16 / 11;
+      margin: 0 auto;
+      border-radius: 16px;
+      background:
+        radial-gradient(1200px 500px at 20% 10%, rgba(13,148,136,0.10), transparent 60%),
+        radial-gradient(1200px 500px at 80% 30%, rgba(255,107,107,0.10), transparent 55%),
+        #fff;
+      border: 1px solid var(--line);
+      overflow:hidden;
+    }
+
+    #cupImage{
+      position:absolute;
+      inset: 0;
+      margin:auto;
+      width: 52%;
+      height: auto;
+      max-height: 78%;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 20px rgba(30,41,59,0.14));
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* Gallows pieces: hidden until mistakes accumulate */
+    .gallows-piece{
+      position:absolute;
+      background: rgba(30,41,59,0.82);
+      border-radius: 6px;
+      opacity: 0;
+      transform: translateZ(0);
+      transition: opacity .2s ease;
+    }
+    .show{ opacity: 1; }
+
+    /* Base */
+    #base{
+      height: 10px;
+      width: 74%;
+      left: 12%;
+      bottom: 10%;
+    }
+    /* Vertical Pole */
+    #pole{
+      width: 10px;
+      height: 66%;
+      left: 18%;
+      bottom: 10%;
+    }
+    /* Top Beam */
+    #beam{
+      height: 10px;
+      width: 56%;
+      left: 18%;
+      top: 11%;
+    }
+    /* Angle Bracket (diagonal) */
+    #brace{
+      width: 10px;
+      height: 30%;
+      left: 28%;
+      top: 9%;
+      transform: rotate(33deg);
+      transform-origin: top left;
+      border-radius: 10px;
+    }
+    /* Rope */
+    #rope{
+      width: 6px;
+      height: 30%;
+      left: 48%;
+      top: 12%;
+      border-radius: 999px;
+      background: rgba(30,41,59,0.65);
+      z-index: 0.1;
+    }
+
+    /* Noose */
+#noose {
+  position: absolute;
+  
+  /* 1. HORIZONTAL WIDTH: Adjust this to match the width of the cup body */
+  width: 160px; 
+  
+  /* 2. VERTICAL HEIGHT: Adjust for how "deep" the U-shape hangs */
+  height: 45px; 
+
+  /* 3. VERTICAL POSITION: Move this to the cup's mid-section */
+  top: 48%; 
+
+  /* 4. CENTERING LOGIC */
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* THE SHAPE */
+  border-radius: 50%; 
+  background: transparent;
+  
+  /* THE WRAP EFFECT */
+  /* We set the top border to transparent to "remove" the back half */
+  border-top: 6px solid transparent; 
+  border-left: 6px solid #1E293B;
+  border-right: 6px solid #1E293B;
+  border-bottom: 10px solid #1E293B; /* Thicker bottom for gravity */
+
+  /* Ensure this is higher than your cup's z-index */
+  z-index: 991;
+  pointer-events: none;
+}
+
+    /* Right panel */
+    .hud{
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    .status-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 12px;
+      border: 1px dashed rgba(13,148,136,0.30);
+      border-radius: 14px;
+      background: rgba(13,148,136,0.06);
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      font-weight: 600;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:99px;background: var(--teal);
+    }
+    .mistakes{
+      font-weight: 700;
+      color: var(--coral2);
+    }
+
+    #message{
+      margin: 0;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.65);
+      min-height: 48px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    #message strong{ color: var(--teal); }
+
+    #word{
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 14px 8px 4px;
+      min-height: 60px;
+    }
+
+    .slot{
+      width: 34px;
+      height: 44px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      box-shadow: 0 8px 14px rgba(30,41,59,0.06);
+    }
+    .slot.revealed{
+      border-color: rgba(13,148,136,0.35);
+      box-shadow: 0 10px 18px rgba(13,148,136,0.10);
+    }
+
+    #keyboard{
+      display:grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .key{
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 0;
+      font-weight: 700;
+      cursor:pointer;
+      box-shadow: 0 10px 16px rgba(30,41,59,0.06);
+      transition: transform .06s ease, border-color .15s ease, background .15s ease;
+      user-select:none;
+    }
+    .key:hover{
+      transform: translateY(-1px);
+      border-color: rgba(13,148,136,0.35);
+      background: rgba(13,148,136,0.05);
+    }
+    .key.used{
+      opacity: 0.5;
+      pointer-events: none;
+      transform: none;
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items:center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .btn{
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor:pointer;
+      background: rgba(13,148,136,0.12);
+      color: var(--text);
+    }
+    .btn:hover{ background: rgba(13,148,136,0.18); }
+
+    .tiny{
+      opacity: 0.75;
+      font-size: 12px;
+      line-height: 1.3;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🍵 Hangman</h1>
+      <a class="home-btn" href="../../index.html">Back Home</a>
+    </header>
+
+    <div class="grid">
+      <section class="card stage-wrap" aria-label="Hangman stage">
+        <div id="stage">
+          <!-- Gallows pieces (reveal per wrong guess) -->
+          <div id="base" class="gallows-piece" aria-hidden="true"></div>
+          <div id="pole" class="gallows-piece" aria-hidden="true"></div>
+          <div id="beam" class="gallows-piece" aria-hidden="true"></div>
+          <div id="brace" class="gallows-piece" aria-hidden="true"></div>
+          <div id="rope" class="gallows-piece" aria-hidden="true"></div>
+          <div id="noose" class="gallows-piece" aria-hidden="true"></div>
+
+          <!-- Cup mood image -->
+          <img id="cupImage" src="cup-happy.png" alt="Tea cup mood stage">
+        </div>
+
+        <div id="word" aria-label="Word display"></div>
+      </section>
+
+      <aside class="card hud" aria-label="Game controls">
+        <div class="status-row">
+          <div class="pill"><span class="dot"></span>Guesses</div>
+          <div class="mistakes"><span id="mistakes">0</span> / 6</div>
+        </div>
+
+        <p id="message">
+          <span>Type a letter or tap the keyboard.</span>
+          <strong id="stateTag">Brewing…</strong>
+        </p>
+
+        <div id="keyboard" aria-label="On-screen keyboard"></div>
+
+        <div class="controls">
+          <button class="btn" id="restartBtn" type="button">New Cup</button>
+          <div class="tiny">
+            Dual input: physical keyboard + on-screen keys.<br/>
+            In java, the real and guessed word are arrays updated each guess.<br/>
+            Wrong guesses build the gallows. 6 mistakes ends the brew.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Load same filename but .js extension -->
+  <script src="hangman.js"></script>
+</body>
+</html>

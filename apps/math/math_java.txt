@@ -1,0 +1,166 @@
+The java files for this game are each in seperate java files and some parts are not entirely organized so this is just a collection of the java files
+because I made them seperately for each operation:
+
+
+public class MeanDeviation {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		double[] arr1 = new double[100];
+		for (int i = 0; i < arr1.length; i++) {
+			double random_number = Math.random() * 100;
+			arr1[i] = random_number;
+			random_number = (int)(random_number * 100) / 100.0;
+			arr1[i] = random_number;
+		}	
+		
+		int index = 0;
+		for (double e: arr1) {
+			index++;
+			System.out.print(e + "  ");
+			if (index % 10 == 0) {
+				System.out.println(e);
+			}
+		}
+		
+		System.out.println("\nMinimum: " + find_min(arr1));
+		System.out.println("Maximum: " + find_max(arr1));
+		System.out.println("Mean: " + find_mean(arr1));
+		System.out.println("Standard Deviation: " + find_standard_deviation(arr1));
+	}
+	
+	public static double find_max(double[] a) {
+		double max = a[0];
+		for (double e: a) {
+			if (e > max) {
+				max = e;
+			}
+		}
+		return max;
+	}
+
+	public static double find_min(double[] a) {
+		double min = a[0];
+		for (double e: a) {
+			if (e < min) {
+				min = e;
+			}
+		}
+		return min;
+	}
+	
+	public static double find_mean(double[] a) {
+		double sum = 0.0;
+		for (double e: a) {
+			sum += e;
+		}
+		double mean = sum / a.length;
+		return (int)(mean * 100) / 100.0;
+	}
+	
+	public static double find_standard_deviation(double[] a) {
+		double sum = find_mean(a);
+		double standard_deviation = 0.0;
+		for (double e: a) {
+			standard_deviation += (e - sum) * (e - sum);
+		}
+		standard_deviation = Math.sqrt(standard_deviation / a.length - 1);
+		return (int)(standard_deviation * 100) / 100.0;
+	}
+}
+
+
+import java.util.*;
+
+public class Distinct {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner input = new Scanner(System.in);
+		System.out.print("What is the length of the array? ");
+		int size = input.nextInt();
+		int[] arr = new int[size];
+		
+		int count = 0;
+		System.out.print("Enter " + size + " numbers: ");
+		for (int i = 0; i < arr.length; i++) {
+			int num = input.nextInt();
+			if (!already_there(num, arr)) {
+				arr[count] = num;
+				count++;
+			}
+		}
+		
+		System.out.println("Number of distinct numbers: " + count);
+		System.out.print("The distinct Numbers: ");
+		for(int i = 0; i < count; i++) {
+			System.out.print(arr[i] + " ");
+		}
+	}
+	
+	public static boolean already_there(int n, int[] a) {
+		for (int e: a) {
+			if (e == n) {return true;}
+		}
+		return false;
+	}
+}
+
+
+public class AnalyzeNumbers {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		double[] array = {3.4, 5, 6, 1, 6.5, 7.8, 3.5, 9.8, 4, 2.1};
+		double sum = 0;
+		
+		for (double e: array) {
+			sum += e;
+		}
+		
+		double average = sum / array.length;
+		System.out.println("average is " + average);
+	}
+
+}
+
+
+
+public class PassByValue {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int size = 5;
+		int[] arr = new int[size];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = i + 1;
+		}
+		
+		// Before
+		for (int e: arr) {
+			System.out.print(e + " ");
+		}
+		System.out.println("size is " + size);
+		
+		// During
+		change_array(size, arr);
+		
+		// After
+		for (int e: arr) {
+			System.out.print(e + " ");
+		}
+		System.out.println("size is " + size);
+		
+		System.out.println("Size reverts back but the array does not");
+	}
+	
+	public static void change_array(int s, int[] a) {
+		s = 10;
+		a[0] = 67;
+		for (int e: a) {
+			System.out.print(e + " ");
+		}
+		System.out.println("size is " + s);
+	}
+
+}

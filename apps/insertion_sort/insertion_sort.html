@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Insertion Sort — Interactive Module</title>
+
+  <!-- Google Font: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./insertion_sort.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1 class="title">⬇️➕ <i>Insertion</i> Sort</h1>
+      <a class="back-home" href="../../index.html" rel="noopener">Back Home</a>
+    </header>
+
+    <section class="card">
+      <p class="lead">
+        Insertion sort builds a sorted portion of the array one element at a time. It takes the next element from the
+        unsorted portion and inserts it into the correct position among the already-sorted elements by shifting larger
+        elements to the right. It is efficient for small or nearly-sorted arrays and is stable.
+      </p>
+
+      <h2 class="sub"><span style="color: #0D9488;">Java Implementation</span> (well-commented)</h2>
+      <pre class="code"><code>
+// InsertionSort.java
+// Simple insertion sort implementation in Java with comments.
+
+public class InsertionSort {
+    // Sorts the input array in ascending order using insertion sort.
+    public static void insertionSort(int[] arr) {
+        int n = arr.length;
+
+        // Start from the second element (index 1). The subarray arr[0..i-1] is considered sorted.
+        for (int i = 1; i < n; i++) {
+            // currentValue is the element we want to insert into the sorted portion.
+            int currentValue = arr[i];
+            // j is used to scan the sorted portion to find the insertion point.
+            int j = i - 1;
+
+            // Shift elements of the sorted portion that are greater than currentValue
+            // to the right by one position to make space for insertion.
+            while (j >= 0 && arr[j] > currentValue) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+
+            // Insert currentValue into its correct position (j+1).
+            arr[j + 1] = currentValue;
+
+            // After this iteration, arr[0..i] is sorted.
+        }
+    }
+
+    // Helper to print arrays (for demonstration)
+    public static void printArray(int[] arr) {
+        for (int x : arr) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        int[] data = {9, 5, 1, 4, 3};
+        System.out.println("Before sort:");
+        printArray(data);
+
+        insertionSort(data);
+
+        System.out.println("After sort:");
+        printArray(data);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section class="card interactive">
+      <h2 class="sub">Interactive Visualization</h2>
+
+      <div class="controls">
+        <label class="small">Array size:
+          <input id="sizeInput" type="number" min="2" max="12" value="8">
+        </label>
+
+        <button id="randomizeBtn" class="btn">Randomize</button>
+        <button id="resetBtn" class="btn outline">Reset</button>
+        <button id="startBtn" class="btn primary">Run Insertion Sort</button>
+      </div>
+
+      <p class="small muted">Click any bar to edit its value (1–10). Press Enter or click outside to confirm.</p>
+
+      <div id="arrayContainer" class="array"></div>
+
+      <div class="legend">
+        <span class="chip">Teal = current key being inserted</span>
+        <span class="chip alt">Coral = element being compared/shifting</span>
+        <span class="chip done">Dark = sorted portion</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="sub"><span style="color: #0D9488;">Pros</span> & <span style="color: #FF6B6B;">Cons</span></h2>
+      <p>
+        <span style="color: #0D9488;">Pros:</span> Simple to implement, stable, works very well for small datasets and nearly-sorted arrays.
+        It sorts in-place and requires only O(1) extra space.
+      </p>
+      <p>
+        <span style="color: #FF6B6B;">Cons:</span> Has O(n²) time complexity in the average and worst cases, so it is inefficient for large random arrays
+        compared to faster algorithms like mergesort or quicksort.
+      </p>
+
+      <h3 class="sub small">Best suited for</h3>
+      <p>
+        Insertion sort is best for small arrays, arrays that are already mostly sorted, or when you need a stable, in-place sort with low overhead.
+      </p>
+
+      <h3 class="sub small">Quick summary</h3>
+      <p>
+        Insertion sort processes the array left-to-right, inserting each new element into the correct position within the sorted left-side by shifting elements.
+        It is intuitive, stable, and efficient for small or nearly-sorted inputs but not suitable for large unsorted datasets.
+      </p>
+    </section>
+
+    <footer class="foot">
+      <small class="muted">Interactive demo showing step-by-step insertion sort with shifting animations.</small>
+    </footer>
+  </main>
+
+  <script type="module" src="./insertion_sort.js"></script>
+</body>
+</html>

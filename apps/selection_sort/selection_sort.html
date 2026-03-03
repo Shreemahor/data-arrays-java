@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selection Sort — Interactive Module</title>
+
+  <!-- Google Font: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./selection_sort.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1 class="title">⬇️🔂 <i>Selection</i> Sort</h1>
+      <a class="back-home" href="../../index.html" rel="noopener">Back Home</a>
+    </header>
+
+    <section class="card">
+      <p class="lead">
+        Selection sort is a simple comparison-based sorting algorithm. It works by repeatedly finding the minimum element
+        from the unsorted portion of the array and moving it to the end of the sorted portion. Each pass selects the next
+        smallest element and places it in its final position until the whole array is sorted.
+      </p>
+
+      <h2 class="sub"><span style="color: #0D9488;">Java Implementation</span> (well-commented)</h2>
+      <pre class="code"><code>
+// SelectionSort.java
+// Simple implementation of selection sort in Java with comments.
+
+public class SelectionSort {
+    // Sorts the input array in ascending order.
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+
+        // Move the boundary of the unsorted subarray
+        // i is the index where the next minimum will be placed.
+        for (int i = 0; i < n - 1; i++) {
+            // Assume the element at i is the minimum.
+            int minIndex = i;
+
+            // Find the true minimum element in the unsorted portion (i+1 ... n-1).
+            for (int j = i + 1; j < n; j++) {
+                // If arr[j] is smaller than current min, update minIndex.
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+
+            // If we found a new minimum, swap it with the element at i.
+            if (minIndex != i) {
+                int temp = arr[i];
+                arr[i] = arr[minIndex];
+                arr[minIndex] = temp;
+            }
+
+            // After this iteration, element at index i is in its final sorted position.
+        }
+    }
+
+    // Helper to print arrays (for demonstration)
+    public static void printArray(int[] arr) {
+        for (int x : arr) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        int[] data = {64, 25, 12, 22, 11};
+        System.out.println("Before sort:");
+        printArray(data);
+
+        selectionSort(data);
+
+        System.out.println("After sort:");
+        printArray(data);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section class="card interactive">
+      <h2 class="sub">Interactive Visualization</h2>
+
+      <div class="controls">
+        <label class="small">Array size:
+          <input id="sizeInput" type="number" min="2" max="12" value="8">
+        </label>
+
+        <button id="randomizeBtn" class="btn">Randomize</button>
+        <button id="resetBtn" class="btn outline">Reset</button>
+        <button id="startBtn" class="btn primary">Run Selection Sort</button>
+      </div>
+
+      <p class="small muted">Click any bar to edit its value (1–10). Press Enter or click outside to confirm.</p>
+
+      <div id="arrayContainer" class="array"></div>
+
+      <div class="legend">
+        <span class="chip">Teal = current index (i)</span>
+        <span class="chip alt">Coral = current minimum (minIndex)</span>
+        <span class="chip done">Dark = sorted portion</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="sub"><span style="color: #0D9488;">Pros</span> & <span style="color: #FF6B6B;">Cons</span></h2>
+      <p>
+        <span style="color: #0D9488;">Pros:</span> Selection sort is easy to understand and implement. It performs a small number of swaps — at most n−1 swaps —
+        which can be helpful when write operations are expensive.
+      </p>
+      <p>
+        <span style="color: #FF6B6B;">Cons:</span> It has O(n²) time complexity for all cases (best, average, worst), making it inefficient for large arrays when
+        compared to faster algorithms like quicksort or mergesort.
+      </p>
+
+      <h3 class="sub small">Best suited for</h3>
+      <p>
+        Selection sort is useful for small arrays, arrays where memory writes are costly, or educational purposes to
+        demonstrate basic sorting mechanics.
+      </p>
+
+      <h3 class="sub small">Quick summary</h3>
+      <p>
+        Selection sort repeatedly finds the minimum element from the unsorted part and puts it at the beginning. It's
+        simple and stable in terms of concept (not stable as an algorithm by default), but not efficient for large datasets.
+      </p>
+    </section>
+
+    <footer class="foot">
+      <small class="muted">Interactive demo showing step-by-step selection sort with swap animations.</small>
+    </footer>
+  </main>
+
+  <script type="module" src="./selection_sort.js"></script>
+</body>
+</html>

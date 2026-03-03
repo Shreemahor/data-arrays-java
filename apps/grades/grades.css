@@ -1,0 +1,157 @@
+:root {
+    --background-color: #FDFBF7; /* Soft Cream */
+    --text-color: #1E293B;     /* Slate */
+    --primary-accent: #0D9488;   /* Teal */
+    --secondary-accent: #FF6B6B; /* Coral */
+    --border-color: #E8E5E0;
+    --container-bg: #ffffff;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px; /* Add some padding around the content */
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px; /* A comfortable width for content */
+    background-color: var(--container-bg);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--border-color);
+    text-align: center; /* Center title and controls */
+}
+
+h1 {
+    color: var(--primary-accent);
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: 700;
+}
+
+#game-area {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: center;
+    gap: 20px; /* Space between score elements */
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    background-color: var(--background-color); /* Slightly different bg for game area */
+}
+
+.score-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--container-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 10px; /* Slightly less rounded than the main container */
+    padding: 10px 15px;
+    min-width: 70px; /* Ensure some minimum width */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s ease-in-out; /* Subtle hover effect */
+}
+
+.score-entry:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.score-value {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--primary-accent);
+    margin-bottom: 5px;
+}
+
+.grade-value {
+    font-size: 0.9em;
+    font-weight: 400;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.test-results {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.difficulty, .class-average {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.difficulty span {
+    color: var(--primary-accent);
+}
+
+.difficulty .emoji {
+    margin-left: 8px;
+    font-size: 1.2em;
+}
+
+.class-average span {
+    color: var(--secondary-accent);
+}
+
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+#new-test-btn {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--container-bg); /* White text */
+    background-color: var(--primary-accent); /* Teal base */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#new-test-btn:hover {
+    background-color: #077f72; /* Darker teal */
+    transform: translateY(-1px);
+}
+
+#back-home-btn {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--container-bg); /* White text */
+    background: linear-gradient(to bottom, var(--secondary-accent), #EE5A6F); /* Coral gradient */
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease-in-out, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#back-home-btn:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}

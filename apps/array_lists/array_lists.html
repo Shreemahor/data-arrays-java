@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array List Education</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #FDFBF7; /* soft cream */
+            --text-color: #1E293B; /* slate */
+            --primary-accent: #0D9488; /* teal */
+            --secondary-accent: #FF6B6B; /* coral */
+            --secondary-accent-gradient: linear-gradient(to bottom, #FF6B6B, #EE5A6F);
+            --border-color: #E8E5E0; /* light beige */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary-accent);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .container {
+            background-color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .container h2 {
+            color: var(--primary-accent);
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .animation-placeholder {
+            width: 100%;
+            height: 350px;
+            background-color: var(--background-color);
+            border: 2px dashed var(--primary-accent);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-style: italic;
+            color: var(--primary-accent);
+            margin-bottom: 30px;
+        }
+
+        .code-snippet {
+            background-color: #f8f9fa; /* Light gray background for code */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            overflow-x: auto; /* For horizontal scrolling if code is long */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+        }
+
+        .simulation-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .simulation-controls input[type="text"],
+        .simulation-controls input[type="number"] {
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+        }
+
+        .simulation-controls button {
+            padding: 10px 15px;
+            background-color: var(--primary-accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .simulation-controls button:hover {
+            background-color: #047857; /* Darker teal on hover */
+            transform: translateY(-2px);
+        }
+
+        .back-home-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--secondary-accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 25px; /* More rounded */
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); /* Coral shadow */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .back-home-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Styles for the simulation table */
+        .simulation-table {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+            min-height: 60px; /* To prevent layout shift */
+        }
+
+        .sim-cell {
+            background-color: var(--background-color);
+            border: 2px solid var(--primary-accent);
+            border-radius: 8px;
+            padding: 10px 15px;
+            min-width: 60px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">⛓️🔗🟥 ARRAY LISTS 🟥🔗⛓️</h1>
+
+    <div class="container">
+        <h2>What are Java Array Lists?</h2>
+        <p>
+            An `ArrayList` in Java is a dynamic, resizable array. Unlike traditional arrays that have a fixed size determined at the time of creation, `ArrayLists` can grow or shrink as needed. They are part of the Java Collections Framework and provide more flexibility. Internally, an `ArrayList` uses an array to store its elements. When the internal array becomes full and you try to add a new element, the `ArrayList` automatically creates a new, larger array, copies all the elements from the old array to the new one, and then adds the new element. This dynamic resizing is what makes `ArrayLists` so useful for situations where you don't know the exact number of elements you'll need to store beforehand.
+        </p>
+        <p>
+            The basic syntax involves declaring and initializing an `ArrayList`. For example: `ArrayList<String> names = new ArrayList<>();`. The `<String>` part specifies the type of elements the list will hold (generics). Common methods include `add(element)` to append an element, `add(index, element)` to insert at a specific position, `get(index)` to retrieve an element, `set(index, element)` to replace an element, `remove(index)` or `remove(object)` to delete elements, and `size()` to get the number of elements. You'd choose an `ArrayList` over a standard array when you need flexibility in size, frequent insertions or deletions (though it's not always the most efficient for these operations in the middle of the list), or when you want to leverage the rich functionality of the Collections Framework.
+        </p>
+        <div class="animation-placeholder">
+            <img src="annoted_array_list.png" alt="Annotated Array List Visualization" style="max-width: 100%; max-height: 100%;">
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>The ArrayList Index Shifting Problem</h2>
+        <p>
+            A common mistake when working with `ArrayLists` is the "index shifting" problem, especially when iterating and removing elements. When you remove an element at a specific index, all subsequent elements automatically shift one position to the left to fill the gap. This means that if you're iterating through the list and remove an element, the element that was *after* the removed one now occupies the index you just checked. If your loop continues to the next index, you'll skip over this element entirely.
+        </p>
+        <div class="code-snippet">
+            <pre><code>
+// Example: Removing even numbers, but with a bug
+ArrayList&lt;Integer&gt; numbers = new ArrayList&lt;&gt;(Arrays.asList(1, 2, 3, 4, 5, 6));
+
+for (int i = 0; i &lt; numbers.size(); i++) {
+    if (numbers.get(i) % 2 == 0) {
+        numbers.remove(i); // Problem: shifts next elements!
+    }
+}
+// Expected: [1, 3, 5]
+// Actual: [1, 3, 4, 6] - Oops! 4 was skipped because 6 shifted into its place.
+            </code></pre>
+        </div>
+        <p>
+            Here are some nice ways to get around this:
+        </p>
+        <ul>
+            <li>
+                <strong>Iterate Backwards:</strong> When you iterate from the end of the list towards the beginning, removing an element doesn't affect the indices of the elements you haven't visited yet.
+                <div class="code-snippet">
+                    <pre><code>
+// Solution 1: Iterate backwards
+ArrayList&lt;Integer&gt; numbers1 = new ArrayList&lt;&gt;(Arrays.asList(1, 2, 3, 4, 5, 6));
+for (int i = numbers1.size() - 1; i &gt;= 0; i--) {
+    if (numbers1.get(i) % 2 == 0) {
+        numbers1.remove(i);
+    }
+}
+// Result: [1, 3, 5] - Correct!
+                    </code></pre>
+                </div>
+            </li>
+            <li>
+                <strong>Decrement on Removal:</strong> If you like iterating forwards, you can just decrement the index variable when you remove an element. This way, the next iteration will check the new element that has shifted into the current index.
+                <div class="code-snippet">
+                    <pre><code>
+// Solution 2: Just Decrement after a Removal
+ArrayList&lt;Integer&gt; numbers2 = new ArrayList&lt;&gt;(Arrays.asList(1, 2, 3, 4, 5, 6));
+for (int n = 0; n < numbers2.size(); n++) {
+			if (numbers2.get(n) % 2 == 0) {
+				numbers2.remove(n);
+				n--;
+			}
+		}
+// Result: [1, 3, 5] - Correct!
+                    </code></pre>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h2>Interactive ArrayList Simulation</h2>
+        <p>
+            Enter values and use the controls below to see how an `ArrayList` behaves. Try adding, getting, setting, and removing elements to observe the dynamic nature and index shifting.
+        </p>
+
+        <div class="simulation-controls">
+            <input type="text" id="valueToAdd" placeholder="Value to Add">
+            <input type="number" id="indexToAddAt" placeholder="Index (optional)">
+            <button id="addButton">Add</button>
+
+            <input type="number" id="indexToRemove" placeholder="Index to Remove">
+            <button id="removeButton">Remove</button>
+
+            <input type="number" id="indexToGet" placeholder="Index to Get">
+            <button id="getButton">Get</button>
+
+            <input type="text" id="valueToSet" placeholder="New Value">
+            <input type="number" id="indexToSet" placeholder="Index to Set">
+            <button id="setButton">Set</button>
+        </div>
+
+        <div class="simulation-table" id="arrayListContainer">
+            <!-- Cells will be generated here by JavaScript -->
+        </div>
+        <div id="simulationOutput" style="margin-top: 15px; font-weight: 600; color: var(--primary-accent);"></div>
+    </div>
+
+    <a href="../../index.html" class="back-home-button">Back Home</a>
+
+    <script src="array_lists.js"></script>
+</body>
+</html>

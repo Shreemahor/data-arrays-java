@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Teal & Coral Theme */
+        :root {
+            --background-color: #FDFBF7; /* Soft Cream */
+            --text-color: #1E293B;       /* Slate */
+            --primary-accent: #0D9488;   /* Teal */
+            --secondary-accent: #FF6B6B; /* Coral */
+            --secondary-hover: #EE5A6F;  /* Slightly darker coral for hover */
+            --border-color: #E8E5E0;     /* Light Grey-ish for borders */
+            --container-bg: #FFFFFF;     /* White containers */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-title {
+            color: var(--primary-accent);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .button-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(to right, var(--secondary-accent), var(--secondary-hover));
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, transform 0.2s ease;
+            z-index: 10; /* Ensure it's above other content */
+        }
+
+        .button-home:hover {
+            background: linear-gradient(to right, var(--secondary-hover), var(--secondary-accent));
+            transform: translateY(-2px);
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .input-section label,
+        .input-section input,
+        .input-section button {
+            margin: 10px 5px;
+            padding: 10px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .input-section input[type="number"] {
+            width: 80px;
+            text-align: center;
+            background-color: var(--container-bg);
+        }
+
+        .input-section button {
+            background-color: var(--primary-accent);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border-color: var(--primary-accent);
+        }
+
+        .input-section button:hover {
+            background-color: #077A70; /* Darker teal for hover */
+            transform: translateY(-1px);
+        }
+
+        .array-table-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 10px;
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden; /* To ensure rounded corners for cells */
+        }
+
+        th, td {
+            padding: 10px 15px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 6px; /* Slightly rounded cells */
+        }
+
+        th {
+            background-color: var(--primary-accent);
+            color: white;
+            font-weight: 600;
+        }
+
+        td input[type="number"] {
+            width: 60px;
+            text-align: center;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95em;
+            background-color: var(--container-bg);
+        }
+
+        .merge-button {
+            display: block;
+            margin: 30px auto 0;
+            padding: 15px 30px;
+            background-color: var(--secondary-accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .merge-button:hover {
+            background: linear-gradient(to right, var(--secondary-hover), var(--secondary-accent));
+            transform: translateY(-3px);
+        }
+
+        #output-container {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 800px;
+            min-height: 100px; /* To give it some visible space even when empty */
+            text-align: left;
+            font-size: 1.1em;
+            line-height: 1.6;
+            overflow-wrap: break-word; /* To handle long merged arrays */
+        }
+
+        #output-container h3 {
+            color: var(--primary-accent);
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .array-table-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            table {
+                margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../../index.html" class="button-home">&larr; Back Home</a>
+
+    <h1 class="game-title">Merge Game</h1>
+
+    <div class="container input-section">
+        <h2>Array Setup</h2>
+        <div>
+            <label for="array1-size">Array 1 Size:</label>
+            <input type="number" id="array1-size" min="1" value="5">
+        </div>
+        <div>
+            <label for="array2-size">Array 2 Size:</label>
+            <input type="number" id="array2-size" min="1" value="8">
+        </div>
+        <button id="create-arrays-btn">Create Arrays</button>
+    </div>
+
+    <div class="container array-table-container" id="arrays-display">
+        <!-- Tables will be generated here by JavaScript -->
+    </div>
+
+    <button class="merge-button" id="merge-btn">Merge Arrays</button>
+
+    <div class="container" id="output-container">
+        <h3>Merged Output</h3>
+        <p>Click "Merge Arrays" to see the result here.</p>
+    </div>
+
+    <script src="merge.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Merge Sort — Interactive Module</title>
+
+  <!-- Google Font: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./merge_sort.css">
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1 class="title">⬇️🔀 <i>Merge</i> Sort</h1>
+      <a class="back-home" href="../../index.html" rel="noopener">Back Home</a>
+    </header>
+
+    <section class="card">
+      <p class="lead">
+        Merge sort is a divide-and-conquer sorting algorithm. It works by recursively splitting the array into halves until
+        each subarray has one element, then repeatedly merging those subarrays in sorted order. The merging step combines two
+        sorted lists into one sorted list by repeatedly taking the smaller front element.
+      </p>
+
+      <h2 class="sub"><span style="color: #0D9488;">Java Implementation</span> (well-commented)</h2>
+      <pre class="code"><code>
+// MergeSort.java
+// Classic top-down merge sort implementation in Java with comments.
+
+public class MergeSort {
+    // Public API: sorts the array in ascending order.
+    public static void mergeSort(int[] arr) {
+        if (arr == null || arr.length < 2) return;
+        // Temporary array used during merges
+        int[] aux = new int[arr.length];
+        mergeSortRecursive(arr, aux, 0, arr.length - 1);
+    }
+
+    // Recursively split the array and merge sorted halves.
+    private static void mergeSortRecursive(int[] arr, int[] aux, int low, int high) {
+        // Base case: single element is already sorted
+        if (low >= high) return;
+
+        int mid = low + (high - low) / 2;
+
+        // Sort left half
+        mergeSortRecursive(arr, aux, low, mid);
+
+        // Sort right half
+        mergeSortRecursive(arr, aux, mid + 1, high);
+
+        // Merge sorted halves [low..mid] and [mid+1..high]
+        merge(arr, aux, low, mid, high);
+    }
+
+    // Merge two adjacent sorted subarrays into arr.
+    // Left:  low..mid, Right: mid+1..high
+    private static void merge(int[] arr, int[] aux, int low, int mid, int high) {
+        // Copy the range into auxiliary array
+        for (int k = low; k <= high; k++) {
+            aux[k] = arr[k];
+        }
+
+        int i = low;      // pointer in left half
+        int j = mid + 1;  // pointer in right half
+        int k = low;      // pointer in destination (arr)
+
+        // Merge by taking the smaller of aux[i] and aux[j]
+        while (i <= mid && j <= high) {
+            if (aux[i] <= aux[j]) {
+                arr[k++] = aux[i++];
+            } else {
+                arr[k++] = aux[j++];
+            }
+        }
+
+        // If left half has remaining elements, copy them
+        while (i <= mid) {
+            arr[k++] = aux[i++];
+        }
+
+        // Remaining right-half elements (if any) are already in place.
+    }
+
+    // Example usage and simple print helper
+    public static void printArray(int[] arr) {
+        for (int x : arr) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int[] data = {38, 27, 43, 3, 9, 82, 10};
+        System.out.println("Before sort:");
+        printArray(data);
+
+        mergeSort(data);
+
+        System.out.println("After sort:");
+        printArray(data);
+    }
+}
+      </code></pre>
+    </section>
+
+    <section class="card interactive">
+      <h2 class="sub">Interactive Visualization</h2>
+
+      <div class="controls">
+        <label class="small">Array size:
+          <input id="sizeInput" type="number" min="2" max="12" value="8">
+        </label>
+
+        <button id="randomizeBtn" class="btn">Randomize</button>
+        <button id="resetBtn" class="btn outline">Reset</button>
+        <button id="startBtn" class="btn primary">Run Merge Sort</button>
+      </div>
+
+      <p class="small muted">Click any bar to edit its value (1–10). Press Enter or click outside to confirm.</p>
+
+      <div id="arrayContainer" class="array"></div>
+
+      <div class="legend">
+        <span class="chip">Teal = left merge region</span>
+        <span class="chip alt">Coral = right merge region / current compare</span>
+        <span class="chip done">Dark = merged / placed in final position</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="sub"><span style="color: #0D9488;">Pros</span> & <span style="color: #FF6B6B;">Cons</span></h2>
+      <p>
+        <span style="color: #0D9488;">Pros:</span> Merge sort has guaranteed O(n log n) time complexity in best, average and worst cases, and is stable
+        (maintains input order for equal elements) when implemented carefully. It performs particularly well on large datasets and when stable sorting is needed.
+      </p>
+      <p>
+        <span style="color: #FF6B6B;">Cons:</span> It requires additional memory proportional to the array size for the merge step (unless implemented as an in-place variant),
+        which can be a disadvantage in memory-constrained environments.
+      </p>
+
+      <h3 class="sub small">Best suited for</h3>
+      <p>
+        Merge sort is best for large arrays, data that must be stably sorted, and situations where worst-case performance guarantees are required.
+        It's also suited for external sorting (sorting data that doesn't fit in memory) because merges can be done in streamed fashion.
+      </p>
+
+      <h3 class="sub small">Quick summary</h3>
+      <p>
+        Merge sort divides the array recursively and merges sorted subarrays. It reliably achieves O(n log n) runtime and produces stable results,
+        at the cost of additional memory for merging.
+      </p>
+    </section>
+
+    <footer class="foot">
+      <small class="muted">Interactive demo showing step-by-step merge operations with merge visualization.</small>
+    </footer>
+  </main>
+
+  <script type="module" src="./merge_sort.js"></script>
+</body>
+</html>
