@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Algorithm Projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;700;800&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --coral:      #F05C3B;
+            --coral-pale: #FEF0EC;
+            --coral-mid:  #F8C4B5;
+            --teal:       #0D9488;
+            --teal-pale:  #EDFAF8;
+            --ink:        #141414;
+            --warm-white: #FDFAF6;
+            --warm-mid:   #F3EDE5;
+            --border:     #DDD6CE;
+            --text-muted: #7A6F66;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--warm-white);
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+        }
+
+        /* ════════ TOPBAR ════════ */
+        .topbar {
+            border-bottom: 1.5px solid var(--border);
+            padding: 0 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 52px;
+            background: var(--warm-white);
+        }
+        .topbar-logo {
+            font-family: 'Fira Mono', monospace;
+            font-size: 0.78em;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+        .topbar-logo span { color: var(--coral); }
+        .topbar-tag {
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* ════════ HERO ════════ */
+        .hero {
+            padding: 0 48px;
+            border-bottom: 1.5px solid var(--border);
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            min-height: 380px;
+        }
+
+        .hero-left {
+            padding: 56px 56px 56px 0;
+            border-right: 1.5px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .hero-number {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: 5.5em;
+            line-height: 1;
+            color: var(--coral);
+            opacity: 0.22;
+            user-select: none;
+        }
+        .hero-label {
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--coral);
+            background: var(--coral-pale);
+            padding: 5px 12px;
+            border-radius: 4px;
+        }
+
+        .hero-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(3em, 6vw, 5.2em);
+            font-weight: 400;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            margin-bottom: 28px;
+        }
+        .hero-title em {
+            font-style: italic;
+            color: var(--teal);
+        }
+
+        .hero-desc {
+            font-size: 0.97em;
+            line-height: 1.8;
+            color: var(--text-muted);
+            max-width: 560px;
+            font-weight: 400;
+        }
+
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding-top: 36px;
+            margin-top: auto;
+        }
+        .hero-meta-item {
+            font-family: 'Fira Mono', monospace;
+            font-size: 0.72em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .hero-meta-item::before {
+            content: '';
+            display: inline-block;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--coral);
+        }
+
+        /* Right panel: mascot */
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px;
+            gap: 16px;
+            background: var(--warm-mid);
+        }
+
+        .mascot-wrap {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 4s ease-in-out infinite;
+        }
+        .mascot-wrap .emoji { font-size: 7.5em; line-height: 1; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-10px); }
+        }
+
+        .mascot-caption {
+            font-family: 'Fira Mono', monospace;
+            font-size: 0.68em;
+            color: var(--text-muted);
+            text-align: center;
+            letter-spacing: 0.04em;
+        }
+        .mascot-caption strong { color: var(--coral); }
+
+        /* ════════ SECTION BAR ════════ */
+        .section-bar {
+            padding: 0 48px;
+            border-bottom: 1.5px solid var(--border);
+            display: flex;
+            align-items: center;
+            height: 48px;
+            background: var(--ink);
+        }
+        .section-bar h3 {
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--warm-white);
+            padding-right: 24px;
+            border-right: 1px solid rgba(255,255,255,0.15);
+            margin-right: 24px;
+        }
+        .section-bar p {
+            font-size: 0.72em;
+            color: rgba(255,255,255,0.42);
+            letter-spacing: 0.05em;
+        }
+        .section-bar .count-badge {
+            margin-left: auto;
+            background: var(--coral);
+            color: white;
+            font-size: 0.7em;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.06em;
+        }
+
+        /* ════════ GRID ════════ */
+        .grid-wrap { padding: 48px; }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* ════════ CARDS ════════ */
+        .app-card {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            border-right: 1.5px solid var(--border);
+            border-bottom: 1.5px solid var(--border);
+            background: white;
+            position: relative;
+            transition: background 0.22s;
+            overflow: hidden;
+        }
+        .app-card:nth-child(3n)         { border-right: none; }
+        .app-card:nth-last-child(-n+3)  { border-bottom: none; }
+
+        .app-card:hover { background: var(--coral-pale); z-index: 2; }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: var(--coral);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+        }
+        .app-card:hover::before { transform: scaleY(1); }
+
+        .app-card .thumb {
+            height: 160px;
+            background: linear-gradient(135deg, #0D9488 0%, #14b8a6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            position: relative;
+            overflow: hidden;
+        }
+        .app-card .thumb::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(0,0,0,0.04) 3px,
+                rgba(0,0,0,0.04) 4px
+            );
+        }
+        .app-card .thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(240,92,59,0), rgba(240,92,59,0.18));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .app-card:hover .thumb::after { opacity: 1; }
+
+        .card-content {
+            padding: 22px 24px 26px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-tag {
+            font-family: 'Fira Mono', monospace;
+            font-size: 0.65em;
+            color: var(--coral);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .app-card h4 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.6em;
+            font-weight: 400;
+            color: var(--ink);
+            margin-bottom: 10px;
+            line-height: 1.2;
+            transition: color 0.2s;
+        }
+        .app-card:hover h4 { color: var(--coral); }
+
+        .app-card p {
+            font-size: 0.87em;
+            line-height: 1.7;
+            color: var(--text-muted);
+            flex: 1;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--ink);
+            text-transform: uppercase;
+            transition: gap 0.2s, color 0.2s;
+        }
+        .card-link::after { content: '→'; transition: transform 0.2s; }
+        .app-card:hover .card-link { color: var(--coral); gap: 12px; }
+        .app-card:hover .card-link::after { transform: translateX(3px); }
+
+        /* ── Featured ── */
+        .app-card.featured {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            border-right: 1.5px solid var(--border);
+        }
+        .app-card.featured:nth-child(3n) { border-right: 1.5px solid var(--border); }
+
+        .app-card.featured .thumb {
+            height: 100%;
+            font-size: 5em;
+            background: linear-gradient(150deg, #0c7a72 0%, #0D9488 40%, #13c4b4 100%);
+        }
+        .app-card.featured .card-content { padding: 40px 38px; }
+        .app-card.featured h4 { font-size: 2.4em; margin-bottom: 14px; }
+        .app-card.featured p  { font-size: 0.93em; }
+        .app-card.featured::before      { background: var(--teal); }
+        .app-card.featured:hover        { background: var(--teal-pale); }
+        .app-card.featured:hover h4     { color: var(--teal); }
+        .app-card.featured:hover .card-link { color: var(--teal); }
+        .app-card.featured .card-tag    { color: var(--teal); }
+
+        /* ════════ FOOTER ════════ */
+        .footer {
+            border-top: 1.5px solid var(--border);
+            padding: 28px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .footer-left {
+            font-family: 'Fira Mono', monospace;
+            font-size: 0.72em;
+            color: var(--text-muted);
+        }
+        .footer-left span { color: var(--coral); }
+        .footer-right {
+            font-size: 0.72em;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+
+        /* ════════ ANIMATIONS ════════ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero-left  { animation: fadeUp 0.6s ease both; }
+        .hero-right { animation: fadeUp 0.6s 0.1s ease both; }
+        .apps-grid  { animation: fadeUp 0.6s 0.18s ease both; }
+
+        /* ════════ RESPONSIVE ════════ */
+        @media (max-width: 1100px) {
+            .apps-grid { grid-template-columns: repeat(2, 1fr); }
+            .app-card:nth-child(3n) { border-right: 1.5px solid var(--border); }
+            .app-card:nth-child(2n) { border-right: none; }
+            .app-card.featured { grid-column: span 2; grid-template-columns: 1fr; }
+            .app-card.featured .thumb { height: 240px; }
+        }
+        @media (max-width: 800px) {
+            .hero { grid-template-columns: 1fr; }
+            .hero-left { border-right: none; border-bottom: 1.5px solid var(--border); padding: 40px 0; }
+            .hero-right { padding: 36px 24px; }
+            .topbar, .hero, .grid-wrap, .section-bar, .footer { padding-left: 24px; padding-right: 24px; }
+            .apps-grid { grid-template-columns: 1fr; }
+            .app-card { border-right: none !important; }
+            .app-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Topbar -->
+    <nav class="topbar">
+        <div class="topbar-logo">by <span>shreemahor</span></div>
+        <div class="topbar-tag">Mar. 2026</div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-left">
+            <div>
+                <div class="hero-eyebrow">
+                    <span class="hero-number">02</span>
+                    <span class="hero-label">Module Lab</span>
+                </div>
+                <h1 class="hero-title">
+                    Data<br>
+                    Arrays<br>
+                    <em>.java</em>
+                </h1>
+                <p class="hero-desc">
+                    A playground for Java logic. Break algorithms, sort data, save teacups, and deconstruct code through interaction. Explore every corner to sharpen your Java fundamentals.                </p>
+            </div>
+            <div class="hero-meta">
+                <div class="hero-meta-item">Arrays</div>
+                <div class="hero-meta-item">Text I/O</div>
+                <div class="hero-meta-item">Recursion</div>
+                <br>
+                <div class="hero-meta-item">ArrayLists</div>
+                <div class="hero-meta-item">Data Manipulation</div>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="mascot-wrap">
+                <img src="java-mascot.png"            
+                    alt="Teacup coder"                   
+                    style="width:200px;height:200px;     
+                    object-fit:contain;">
+            </div>
+            <div class="mascot-caption"><strong>Java</strong> — sipping & shipping</div>
+        </div>
+    </section>
+
+    <!-- Section bar -->
+    <div class="section-bar">
+        <h3>the playground</h3>
+        <p>Click any card to start experimenting:</p>
+        <span class="count-badge">12 demos</span>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-wrap">
+        <div class="apps-grid">
+
+            <!-- FEATURED -->
+            <a href="apps/hangman/hangman.html" class="app-card featured">
+                <div class="thumb"><img src="apps/hangman/cup-worried-3.png" alt="Hangman thumbnail"></div>
+                <div class="card-content">
+                    <div class="card-tag">// arrays</div>
+                    <h4>Hangman</h4>
+                    <p>Guess the hidden word before your brew's over! Test your vocabulary and logic skills in this classic word-guessing game.</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/lockers/lockers.html" class="app-card">
+                <div class="thumb">🔒👣²🔓</div>
+                <div class="card-content">
+                    <div class="card-tag">// arrays</div>
+                    <h4>100 Lockers</h4>
+                    <p>There are 100 lockers, all initially closed. Students visit every nth locker for n from 1 to 100, toggling their state. Which lockers remain open?</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/selection_sort/selection_sort.html" class="app-card">
+                <div class="thumb">🔢👀⬇️🔄📈</div>
+                <div class="card-content">
+                    <div class="card-tag">// data</div>
+                    <h4>Selection Sort</h4>
+                    <p>An unsorted array sits there, full of potential chaos. The algorithm locks eyes on the entire unsorted region, hunts down the smallest value hiding anywhere in it, then drags that value to the front by swapping it into place.
+                        With every hunt completed, one more number is cemented at the beginning — the sorted zone creeps rightward until nothing disorderly remains. Watch how relentlessly it builds order from the left.</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/merge_sort/merge_sort.html" class="app-card">
+                <div class="thumb">🔢✂️⬇️🔗📊</div>
+                <div class="card-content">
+                    <div class="card-tag">// data</div>
+                    <h4>Merge Sort</h4>
+                    <p>Take the entire unsorted list and keep slicing it in half until every piece contains just one element — trivial, already “sorted.” Then reverse the process: merge neighboring sorted pieces by comparing their smallest values and building a new sorted sequence from them. Keep merging larger and larger blocks until the whole array has been reconstructed in perfect order.
+                        Observe how breaking chaos into atoms and then carefully recombining them produces flawless structure.</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/insertion_sort/insertion_sort.html" class="app-card">
+                <div class="thumb">🔢🃏⬅️🔄📈</div>
+                <div class="card-content">
+                    <div class="card-tag">// data</div>
+                    <h4>Insertion Sort</h4>
+                    <p>Start with an unsorted list. Grab the next number that hasn’t been placed yet. Slide it backward through the already-ordered prefix until you find the exact slot where it belongs — shove larger elements right to open the gap, then drop it in. Repeat. The sorted region expands steadily from the left like a hand of cards being neatly arranged as each new one arrives.
+                        See how naturally disorder turns into sequence with every insertion.</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/array_lists/array_lists.html" class="app-card">
+                <div class="thumb">🔗➕📦⛓️</div>
+                <div class="card-content">
+                    <div class="card-tag">// arraylists</div>
+                    <h4>Array Lists</h4>
+                    <p>Explore the dynamic nature of array lists as elements are added and removed, maintaining a flexible structure for efficient data management.</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/recursion/recursion.html" class="app-card featured">
+                <div class="thumb"><img src="apps/recursion/recursion-thumbnail.png" alt="Recursion thumbnail"></div>
+                <div class="card-content">
+                    <div class="card-tag">// recursion</div>
+                    <h4>Recursion</h4>
+                    <p>A function fearlessly calls itself on tinier versions of the same problem, diving deeper and deeper until it slams into a dead-simple base case that just hands back the answer.
+                       Then — magic — every nested call unravels in reverse, snapping small solutions together until the original giant puzzle is elegantly cracked wide open!</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/math/math.html" class="app-card">
+                <div class="thumb">🔢🧮⚖️📊</div>
+                <div class="card-content">
+                    <div class="card-tag">// arrays</div>
+                    <h4>Math Operations</h4>
+                    <p>Perform mathematical operations on array elements: Mean, Median,
+                       Mode, Standard Deviation, Max, Min, Unique Elements</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/text_io/text_io.html" class="app-card featured">
+                <div class="thumb"><img src="apps/text_io/text_io_thumbnail.png" alt="Text I/O thumbnail"></div>
+                <div class="card-content">
+                    <div class="card-tag">// text I/O</div>
+                    <h4>Text I/O</h4>
+                    <p>The program reads what the user types using Scanner and turns it into strings, numbers, or lines. Then it writes to a file that stays after the program finishes suing PrintWriter.
+                       But beware of exceptions - be sure to handle them properly.
+                    </p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/merge/merge.html" class="app-card">
+                <div class="thumb">🧩⤴️</div>
+                <div class="card-content">
+                    <div class="card-tag">// arrays</div>
+                    <h4>Merge Arrays</h4>
+                    <p>Combine two or more arrays into a single array - taking all the elements from each input array - and putting them into the sorted merged array.</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/grades/grades.html" class="app-card">
+                <div class="thumb">📚📝</div>
+                <div class="card-content">
+                    <div class="card-tag">// arrays</div>
+                    <h4>Grades</h4>
+                    <p>The class's grades are in this array of doubles - let's anaylze them and see how hard the test was!</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <a href="apps/shift-shuffle/shift-shuffle.html" class="app-card">
+                <div class="thumb">↔️🔀</div>
+                <div class="card-content">
+                    <div class="card-tag">// arrays</div>
+                    <h4>Shift and Shuffle</h4>
+                    <p>Move elements within an array left or right, or rearrange them in a random order.</p>
+                    <span class="card-link">Launch</span>
+                </div>
+            </a>
+
+            <!-- ADD MORE CARDS HERE -->
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-left">built with <span>Java</span> · ported to <span>JS</span></div>
+        <div class="footer-right">Java Modules</div>
+    </footer>
+
+</body>
+</html>
