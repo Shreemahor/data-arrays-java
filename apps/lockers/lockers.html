@@ -10,21 +10,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
-            --background-color: #FDFBF7; /* Soft Cream */
-            --text-color: #1E293B;      /* Slate */
-            --primary-accent: #0D9488;   /* Teal */
-            --secondary-accent: #FF6B6B; /* Coral */
-            --button-gradient-start: #FF6B6B; /* Coral */
-            --button-gradient-end: #EE5A6F;   /* Slightly darker Coral */
+            --background-color: #FDFBF7;
+            --text-color: #1E293B;
+            --primary-accent: #0D9488;
+            --secondary-accent: #FF6B6B;
+            --button-gradient-start: #FF6B6B;
+            --button-gradient-end: #EE5A6F;
             --container-bg: white;
-            --border-color: #E8E5E0;     /* Light off-white for borders */
+            --border-color: #E8E5E0;
             --locker-closed: #E0E7FF;
             --locker-open: #C7D2FE;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -44,7 +42,7 @@
             border-radius: 12px;
             padding: 30px;
             margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             width: 90%;
             max-width: 1000px;
             text-align: center;
@@ -82,9 +80,7 @@
             color: var(--primary-accent);
         }
 
-        input[type="range"] {
-            width: 200px;
-        }
+        input[type="range"] { width: 200px; }
 
         .stats {
             display: flex;
@@ -107,13 +103,13 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 30px; /* Increased gap for better vertical spacing between rows */
+            gap: 30px;
             margin: 20px 0;
             padding: 20px;
             background-color: #f8f9fa;
             border-radius: 10px;
             min-height: 200px;
-            position: relative; /* For absolute positioning of students */
+            position: relative;
         }
 
         .locker {
@@ -137,18 +133,13 @@
         .locker::before {
             content: "";
             position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
             background-color: #ffffff;
             border-radius: 4px;
             z-index: 1;
         }
 
-        .locker.open::before {
-            background-color: #d1d9ff;
-        }
+        .locker.open::before { background-color: #d1d9ff; }
 
         .locker-handle {
             position: absolute;
@@ -163,12 +154,12 @@
 
         .student {
             position: absolute;
-            width: 30px; /* Increased size for better visibility */
-            height: 30px; /* Increased size for better visibility */
+            width: 30px;
+            height: 30px;
             background-color: var(--secondary-accent);
             border-radius: 50%;
-            border: 2px solid white; /* Added border for contrast */
-            z-index: 10000; /* Even higher z-index to prevent flickering */
+            border: 2px solid white;
+            z-index: 10000;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             transition: transform 0.2s ease;
         }
@@ -176,32 +167,18 @@
         .student::after {
             content: "";
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 12px; /* Adjusted for larger dot */
-            height: 12px; /* Adjusted for larger dot */
+            width: 12px; height: 12px;
             background-color: white;
             border-radius: 50%;
         }
 
-        .student.walk {
-            animation: walk 0.5s infinite alternate;
-        }
-
-        @keyframes walk {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(-5px); }
-        }
-
-        .tap-animation {
-            animation: tap 0.3s ease;
-        }
+        .tap-animation { animation: tap 0.3s ease; }
 
         @keyframes tap {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
 
@@ -217,13 +194,22 @@
             border: none;
             cursor: pointer;
             background: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end));
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
         }
 
-        .back-home-button:hover {
+        .back-home-button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        /* Disabled / running state for start button */
+        #startBtn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            background: linear-gradient(to right, #999, #777);
+            transform: none;
+            box-shadow: none;
         }
 
         .instructions {
@@ -232,14 +218,13 @@
             background-color: #f0f5ff;
             border-radius: 10px;
             font-size: 0.9em;
-            width: 100%; /* Changed to full width */
+            width: 100%;
         }
 
         .locker-number {
             position: absolute;
-            bottom: -25px; /* Slightly increased to ensure readability */
-            left: 0;
-            right: 0;
+            bottom: -25px;
+            left: 0; right: 0;
             text-align: center;
             font-size: 12px;
             color: var(--text-color);
@@ -253,9 +238,8 @@
         <div class="controls">
             <div class="control-group">
                 <label for="speedSlider">Speed Control</label>
-                <input type="range" id="speedSlider" min="1" max="50" value="25"> <!-- Increased max to 50 and default to 25 for faster default speed -->
+                <input type="range" id="speedSlider" min="1" max="50" value="25">
             </div>
-
             <div class="control-group">
                 <label for="studentCount">Number of Students</label>
                 <input type="range" id="studentCount" min="1" max="100" value="100">
@@ -293,6 +277,9 @@
         let studentCount = 100;
         let currentStudent = 0;
         let studentElements = [];
+        let isRunning = false;
+
+        const startBtn = document.getElementById('startBtn');
 
         // Initialize the simulation
         function initSimulation() {
@@ -365,11 +352,18 @@
                 // Reset any existing transform to avoid conflicts
                 student.style.transform = '';
 
+                // At max speed, skip GSAP entirely and just teleport
+                if (speed >= 40) {
+                    gsap.set(student, { x: targetX, y: targetY });
+                    resolve();
+                    return;
+                }
+
                 // Animate to locker (shortened duration and added ease for smoother animation)
                 gsap.to(student, {
                     x: targetX,
                     y: targetY,
-                    duration: 0.1 / speed, // Reduced for faster animation
+                    duration: 0.3 / (speed * speed * 0.04 + 1),
                     ease: "power1.out", // Added ease for smoother motion
                     onComplete: () => {
                         // Tap animation
@@ -377,7 +371,7 @@
                         setTimeout(() => {
                             student.classList.remove('tap-animation');
                             resolve();
-                        }, 100); // Reduced tap duration
+                        }, Math.max(0, 80 - speed * 1.5)); // Reduced tap duration
                     }
                 });
             });
@@ -396,6 +390,11 @@
 
         // Run the simulation
         async function runSimulation() {
+            if (isRunning) return;
+            isRunning = true;
+            startBtn.disabled = true;
+            startBtn.textContent = '🚫 Simulation Running...';
+
             // Reset current student
             currentStudent = 0;
             document.getElementById('studentNumber').textContent = '-';
@@ -439,12 +438,25 @@
                     toggleLocker(lockerIndex);
 
                     // Small delay between actions (reduced for speed)
-                    await new Promise(resolve => setTimeout(resolve, 50 / speed)); // Reduced delay
+                    const stepDelay = speed >= 40 ? 0 : Math.max(0, 40 / speed - 1);
+                    if (stepDelay > 0) {
+                        await new Promise(resolve => setTimeout(resolve, stepDelay)); // Reduced delay
+                    }
                 }
 
                 // Wait for next student (reduced for speed)
-                await new Promise(resolve => setTimeout(resolve, 100 / speed)); // Reduced wait
+                const studentDelay = speed >= 40 ? 0 : Math.max(0, 80 / speed - 2);
+                if (studentDelay > 0) {
+                    await new Promise(resolve => setTimeout(resolve, studentDelay)); // Reduced wait
+                } else {
+                    // Still yield to browser paint thread even at max speed
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
             }
+
+            isRunning = false;
+            startBtn.disabled = false;
+            startBtn.textContent = '🔁 Run Again';
         }
 
         // Event Listeners
